@@ -1,6 +1,6 @@
-# Aiden Voice Processing Service
+# AIDEN - Artificial Intelligence and Digital Entity Network
 
-Aiden is a robust voice processing service that leverages cutting-edge machine learning models to translate speech to text and vice versa. This service uses a user-friendly frontend interface to capture voice inputs, which are then processed by the Aiden backend. The backend employs OpenAI's Whisper for precise speech-to-text conversion and Mixtral8x7b, a mixture of experts language model developed by Mistral AI, for advanced text processing. Finally, the processed text is transformed back into speech with Amazon Polly's lifelike text-to-speech service.
+AIDEN is a robust voice processing service that leverages cutting-edge machine learning models to translate speech to text and vice versa. This service uses a user-friendly frontend interface to capture voice inputs, which are then processed by the AIDEN backend. The backend employs OpenAI's Whisper for precise speech-to-text conversion and Mixtral8x7b, a mixture of experts language model developed by Mistral AI, for advanced text processing. Finally, the processed text is transformed back into speech with Amazon Polly's lifelike text-to-speech service.
 
 ## Architecture Diagram
 ![Architecture Diagram](https://github.com/sudhz/aiden/assets/61375120/76e298c6-58cd-4856-b697-57a66a01a082)
@@ -8,11 +8,11 @@ Aiden is a robust voice processing service that leverages cutting-edge machine l
 
 ## Prerequisites
 
-Before you install and run the Aiden service, make sure you have Node.js and npm installed. Node.js is the runtime environment required to run the application, and npm is the package manager used to install the necessary dependencies.
+Before you install and run the AIDEN service, make sure you have Node.js and npm installed. Node.js is the runtime environment required to run the application, and npm is the package manager used to install the necessary dependencies.
 
 ## Installation
 
-Follow these steps to set up the Aiden service on your local machine:
+Follow these steps to set up the AIDEN service on your local machine:
 
 1. **Clone the repository**
 
@@ -59,7 +59,7 @@ Mixtral8x7b is a state-of-the-art language model developed by Mistral AI. It emp
 
 ## Contributing
 
-We welcome contributions of all kinds from the open-source community. Please read through our CONTRIBUTING.md file for guidelines on how to make a contribution.
+We welcome contributions of all kinds from the open-source community.
 
 ## License
 
@@ -70,5 +70,4 @@ This project is released under the MIT License - see the LICENSE file for detail
 * OpenAI for Whisper, enabling accurate speech-to-text conversion.
 * Mistral AI for the Mixtral8x7b model, providing sophisticated text processing.
 * Amazon Polly for high-quality text-to-speech synthesis.
-* All the contributors who have helped shape Aiden into what it is today.
 
