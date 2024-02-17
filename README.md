@@ -63,7 +63,7 @@ We welcome contributions of all kinds from the open-source community.
 
 ## License
 
-This project is released under the MIT License - see the LICENSE file for details.
+This project is released under the MIT License.
 
 ## Acknowledgments
 
