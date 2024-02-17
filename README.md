@@ -3,7 +3,8 @@
 Aiden is a robust voice processing service that leverages cutting-edge machine learning models to translate speech to text and vice versa. This service uses a user-friendly frontend interface to capture voice inputs, which are then processed by the Aiden backend. The backend employs OpenAI's Whisper for precise speech-to-text conversion and Mixtral8x7b, a mixture of experts language model developed by Mistral AI, for advanced text processing. Finally, the processed text is transformed back into speech with Amazon Polly's lifelike text-to-speech service.
 
 ## Architecture Diagram
-[Architecture Diagram](https://i.imgur.com/pdj0qI7.png)
+[Architecture Diagram](![Untitled-2023-12-06-0937](https://github.com/sudhz/aiden/assets/61375120/a6158c59-a46a-4433-bd4a-28e48c283441)
+)
 
 ## Prerequisites
 
