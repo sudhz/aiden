@@ -55,7 +55,7 @@ After starting the backend server, navigate to the frontend interface. Use the r
 
 ## Mixtral8x7b by Mistral AI
 
-Mixtral8x7b is a state-of-the-art language model developed by Mistral AI. It employs a mixture of experts approach to deliver high-quality text processing, ensuring that the Aiden service can handle complex language tasks efficiently and accurately.
+Mixtral8x7b is a state-of-the-art language model developed by Mistral AI. It employs a mixture of experts approach to deliver high-quality text processing, ensuring that the AIDEN service can handle complex language tasks efficiently and accurately.
 
 ## Contributing
 
