@@ -1,4 +1,3 @@
-
 // import React, { useState, useRef } from 'react';
 
 // function HomeApp() {
@@ -48,7 +47,7 @@
 //     event.preventDefault();
 //     setLoading(true);
 //     let formData = new FormData();
-    
+
 //     if (recordedBlob) {
 //       formData.append('audio', recordedBlob, 'recording.mp3');
 //     } else {
@@ -104,27 +103,31 @@
 
 // export default HomeApp;
 
-import React, { useState, useRef } from 'react';
-import { Container, Button, Box, LinearProgress, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import StopIcon from '@mui/icons-material/Stop';
-import MicIcon from '@mui/icons-material/Mic';
-import SendIcon from '@mui/icons-material/Send';
-import RefreshIcon from '@mui/icons-material/Refresh';
+import { useState, useRef } from "react";
+import { Box, IconButton, LinearProgress, Typography } from "@mui/material";
+import {
+  CloudUpload as CloudUploadIcon,
+  Mic as MicIcon,
+  Stop as StopIcon,
+  Send as SendIcon,
+  Refresh as RefreshIcon,
+} from "@mui/icons-material";
+import styled from "@emotion/styled";
+import { pink, purple } from "@mui/material/colors";
 
-const Input = styled('input')({
-  display: 'none',
+const Input = styled("input")({
+  display: "none",
 });
 
 function HomeApp() {
-  const [audioUrl, setAudioUrl] = useState('');
-  const [error, setError] = useState('');
+  const [audioUrl, setAudioUrl] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordedBlob, setRecordedBlob] = useState(null);
+  const [volume, setVolume] = useState(0); // New state for volume level
   const mediaRecorderRef = useRef(null);
+  const meterRef = useRef(null);
 
   const startRecording = async () => {
     try {
@@ -133,86 +136,133 @@ function HomeApp() {
       mediaRecorderRef.current.ondataavailable = (e) => {
         setRecordedBlob(e.data);
       };
+      mediaRecorderRef.current.onstop = () => {
+        setIsRecording(false);
+      };
+      mediaRecorderRef.current.ondataavailable = (e) => {
+        setRecordedBlob(e.data);
+      };
       mediaRecorderRef.current.start();
       setIsRecording(true);
+      visualizeVolume(stream);
     } catch (err) {
-      console.error('Could not start recording:', err);
-      setError('Could not start recording');
+      console.error("Could not start recording:", err);
+      setError("Could not start recording");
     }
   };
 
   const stopRecording = () => {
     mediaRecorderRef.current.stop();
-    setIsRecording(false);
-    mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+    mediaRecorderRef.current.stream
+      .getTracks()
+      .forEach((track) => track.stop());
   };
 
   const resetForm = () => {
-    setAudioUrl('');
-    setError('');
+    setAudioUrl("");
+    setError("");
     setLoading(false);
     setIsRecording(false);
     setRecordedBlob(null);
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state !== "inactive"
+    ) {
       mediaRecorderRef.current.stop();
-      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+      mediaRecorderRef.current.stream
+        .getTracks()
+        .forEach((track) => track.stop());
     }
+  };
+
+  const visualizeVolume = (stream) => {
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    source.connect(analyser);
+    analyser.fftSize = 256;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const drawMeter = () => {
+      requestAnimationFrame(drawMeter);
+      analyser.getByteFrequencyData(dataArray);
+      const average =
+        dataArray.reduce((acc, val) => acc + val, 0) / bufferLength;
+      setVolume(average / 255);
+    };
+
+    drawMeter();
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     let formData = new FormData();
-    
+
     if (recordedBlob) {
-      formData.append('audio', recordedBlob, 'recording.mp3');
+      formData.append("audio", recordedBlob, "recording.mp3");
     } else {
       formData = new FormData(event.target);
     }
 
     try {
-      const response = await fetch('http://localhost:8000/', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/", {
+        method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error('Failed to synthesize speech');
+        throw new Error("Failed to synthesize speech");
       }
 
       const blob = await response.blob();
       setAudioUrl(URL.createObjectURL(blob));
-      setError('');
+      setError("");
     } catch (error) {
-      console.error('Error:', error);
-      setError('Failed to synthesize speech');
-      setAudioUrl('');
+      console.error("Error:", error);
+      setError("Failed to synthesize speech");
+      setAudioUrl("");
     } finally {
       setLoading(false);
     }
   };
 
-  
   return (
     <Box
       sx={{
-        minHeight: '100vh',
-        width: '100vw',
-        background: 'linear-gradient(135deg, #000033 0%, #333333 100%)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px',
+        minHeight: "100vh",
+        width: "100vw",
+        background: "linear-gradient(135deg, #000033 0%, #333333 90%, #000033)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "20px",
       }}
     >
-      <Typography variant="h4" component="h1" gutterBottom color="white" textAlign="center">
+      <Typography
+        variant="h4"
+        component="h1"
+        gutterBottom
+        color="white"
+        textAlign="center"
+      >
         AIDEN
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: '20px', mt: 2 }}>
+        <Box
+          sx={{ display: "flex", justifyContent: "center", gap: "20px", mt: 2 }}
+        >
           <label htmlFor="contained-button-file">
-            <Input accept="audio/*" id="contained-button-file" multiple type="file" name="audio" style={{ display: 'none' }} />
+            <Input
+              accept="audio/*"
+              id="contained-button-file"
+              multiple
+              type="file"
+              name="audio"
+              style={{ display: "none" }}
+            />
             <IconButton color="secondary" component="span">
               <CloudUploadIcon />
             </IconButton>
@@ -233,7 +283,9 @@ function HomeApp() {
             <RefreshIcon />
           </IconButton>
         </Box>
-        {loading && <LinearProgress sx={{ mt: 2, width: '100%' }} />}
+        {loading && (
+          <LinearProgress color="secondary" sx={{ mt: 2, width: "100%" }} />
+        )}
         {error && <Typography color="error">{error}</Typography>}
         {audioUrl && (
           <audio controls style={{ marginTop: 20 }}>
@@ -241,11 +293,25 @@ function HomeApp() {
             Your browser does not support the audio element.
           </audio>
         )}
+        {isRecording && (
+          <meter
+            ref={meterRef}
+            min="0"
+            max="1"
+            low="0.3"
+            high="0.8"
+            optimum="0.5"
+            value={volume}
+            style={{
+              width: "100%",
+              marginTop: "20px",
+              background: `linear-gradient(to right, ${purple[500]}, ${purple[400]}, ${purple[300]}, ${purple[100]})`,
+            }}
+          />
+        )}
       </Box>
     </Box>
   );
-  
 }
 
 export default HomeApp;
-
