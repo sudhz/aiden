@@ -3,6 +3,8 @@ import multer from "multer";
 import axios from "axios";
 import fs from "fs";
 import FormData from "form-data";
+import cors from "cors";
+
 import {
   PollyClient,
   SynthesizeSpeechCommand,
@@ -20,7 +22,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
-
+app.use(cors());
 app.get("/", function (req, res) {
   res.send("Your server is running!");
 });
