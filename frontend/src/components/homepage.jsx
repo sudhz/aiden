@@ -1,110 +1,11 @@
-// import React, { useState, useRef } from 'react';
-
-// function HomeApp() {
-//   const [audioUrl, setAudioUrl] = useState('');
-//   const [error, setError] = useState('');
-//   const [loading, setLoading] = useState(false);
-//   const [isRecording, setIsRecording] = useState(false);
-//   const [recordedBlob, setRecordedBlob] = useState(null);
-//   const mediaRecorderRef = useRef(null);
-
-//   const startRecording = async () => {
-//     try {
-//       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-//       mediaRecorderRef.current = new MediaRecorder(stream);
-//       mediaRecorderRef.current.ondataavailable = (e) => {
-//         setRecordedBlob(e.data);
-//       };
-//       mediaRecorderRef.current.start();
-//       setIsRecording(true);
-//     } catch (err) {
-//       console.error('Could not start recording:', err);
-//       setError('Could not start recording');
-//     }
-//   };
-
-//   const stopRecording = () => {
-//     mediaRecorderRef.current.stop();
-//     setIsRecording(false);
-//     // Close the stream to release the microphone
-//     mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-//   };
-
-//   const resetForm = () => {
-//     setAudioUrl('');
-//     setError('');
-//     setLoading(false);
-//     setIsRecording(false);
-//     setRecordedBlob(null);
-//     // If there's an active recording, stop it
-//     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-//       mediaRecorderRef.current.stop();
-//       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-//     }
-//   };
-
-//   const handleSubmit = async (event) => {
-//     event.preventDefault();
-//     setLoading(true);
-//     let formData = new FormData();
-
-//     if (recordedBlob) {
-//       formData.append('audio', recordedBlob, 'recording.mp3');
-//     } else {
-//       formData = new FormData(event.target);
-//     }
-
-//     try {
-//       const response = await fetch('http://localhost:8000/', {
-//         method: 'POST',
-//         body: formData
-//       });
-
-//       if (!response.ok) {
-//         throw new Error('Failed to synthesize speech');
-//       }
-
-//       const blob = await response.blob();
-//       setAudioUrl(URL.createObjectURL(blob));
-//       setError('');
-//     } catch (error) {
-//       console.error('Error:', error);
-//       setError('Failed to synthesize speech');
-//       setAudioUrl('');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>AIDEN</h1>
-//       <form onSubmit={handleSubmit}>
-//         <input type="file" name="audio" accept="audio/*" />
-//         {isRecording ? (
-//           <button type="button" onClick={stopRecording}>Stop Recording</button>
-//         ) : (
-//           <button type="button" onClick={startRecording}>Start Recording</button>
-//         )}
-//         <button type="submit">Submit</button>
-//         <button type="button" onClick={resetForm} style={{ marginLeft: '10px' }}>Reset</button>
-//       </form>
-//       {loading && <div>Loading...</div>}
-//       {error && <div style={{ color: 'red' }}>{error}</div>}
-//       {audioUrl && (
-//         <audio controls>
-//           <source src={audioUrl} type="audio/mp3" />
-//           Your browser does not support the audio element.
-//         </audio>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default HomeApp;
-
 import { useState, useRef } from "react";
-import { Box, IconButton, LinearProgress, Typography } from "@mui/material";
+import {
+  Tooltip,
+  Box,
+  IconButton,
+  LinearProgress,
+  Typography,
+} from "@mui/material";
 import {
   CloudUpload as CloudUploadIcon,
   Mic as MicIcon,
@@ -113,7 +14,7 @@ import {
   Refresh as RefreshIcon,
 } from "@mui/icons-material";
 import styled from "@emotion/styled";
-import { pink, purple } from "@mui/material/colors";
+import { purple } from "@mui/material/colors";
 
 const Input = styled("input")({
   display: "none",
@@ -125,7 +26,8 @@ function HomeApp() {
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recordedBlob, setRecordedBlob] = useState(null);
-  const [volume, setVolume] = useState(0); // New state for volume level
+  const [isRecorded, setIsRecorded] = useState(false);
+  const [volume, setVolume] = useState(0);
   const mediaRecorderRef = useRef(null);
   const meterRef = useRef(null);
 
@@ -156,6 +58,7 @@ function HomeApp() {
     mediaRecorderRef.current.stream
       .getTracks()
       .forEach((track) => track.stop());
+    setIsRecorded(true);
   };
 
   const resetForm = () => {
@@ -163,6 +66,7 @@ function HomeApp() {
     setError("");
     setLoading(false);
     setIsRecording(false);
+    setIsRecorded(false);
     setRecordedBlob(null);
     if (
       mediaRecorderRef.current &&
@@ -248,7 +152,7 @@ function HomeApp() {
         color="white"
         textAlign="center"
       >
-        AIDEN
+        AIDEN 🤖
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         <Box
@@ -263,25 +167,39 @@ function HomeApp() {
               name="audio"
               style={{ display: "none" }}
             />
-            <IconButton color="secondary" component="span">
-              <CloudUploadIcon />
-            </IconButton>
+            <Tooltip title="Upload Audio">
+              <IconButton color="secondary" component="span">
+                <CloudUploadIcon />
+              </IconButton>
+            </Tooltip>
           </label>
           {isRecording ? (
-            <IconButton color="secondary" onClick={stopRecording}>
-              <StopIcon />
-            </IconButton>
+            <Tooltip title="Stop Recording">
+              <IconButton color="secondary" onClick={stopRecording}>
+                <StopIcon />
+              </IconButton>
+            </Tooltip>
           ) : (
-            <IconButton color="secondary" onClick={startRecording}>
-              <MicIcon />
-            </IconButton>
+            <Tooltip title="Start Recording">
+              <IconButton color="secondary" onClick={startRecording}>
+                <MicIcon />
+              </IconButton>
+            </Tooltip>
           )}
-          <IconButton color="secondary" type="submit">
-            <SendIcon />
-          </IconButton>
-          <IconButton color="secondary" onClick={resetForm}>
-            <RefreshIcon />
-          </IconButton>
+          <Tooltip title="Send Audio">
+            <IconButton color="secondary" type="submit" disabled={!isRecorded}>
+              <SendIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Reset">
+            <IconButton
+              color="secondary"
+              onClick={resetForm}
+              disabled={!isRecorded}
+            >
+              <RefreshIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
         {loading && (
           <LinearProgress color="secondary" sx={{ mt: 2, width: "100%" }} />

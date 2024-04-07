@@ -5,10 +5,7 @@ import fs from "fs";
 import FormData from "form-data";
 import cors from "cors";
 
-import {
-  PollyClient,
-  SynthesizeSpeechCommand,
-} from "@aws-sdk/client-polly";
+import { PollyClient, SynthesizeSpeechCommand } from "@aws-sdk/client-polly";
 import { configDotenv } from "dotenv";
 configDotenv();
 
@@ -46,7 +43,7 @@ app.post("/", upload.single("audio"), async function (req, res) {
       data: formdata,
     };
     const transcribedResponse = await axios.request(reqOptions);
-    const prompt = `[INST] <<SYS>> Initiate AIDEN, the AI assistant created by Sudhanshu & Megha. AIDEN combines a professional attitude with a friendly touch, making interactions both efficient and enjoyable. It speaks clearly and concisely, avoiding technical jargon unless necessary. At its core, AIDEN values user privacy and operates with ethical integrity, ensuring unbiased and respectful communication in every interaction. <<SYS>> ${transcribedResponse.data.text} [/INST]`;
+    const prompt = `[INST] <<SYS>> Initiate AIDEN, the AI assistant created by Sudhanshu Makwana & Megha Kawad. AIDEN combines a professional attitude with a friendly touch, making interactions both efficient and enjoyable. It speaks clearly and concisely, avoiding technical jargon unless necessary. At its core, AIDEN values user privacy and operates with ethical integrity, ensuring unbiased and respectful communication in every interaction. <<SYS>> ${transcribedResponse.data.text} [/INST]`;
     const response = await fetch(
       "https://api.deepinfra.com/v1/inference/mistralai/Mixtral-8x7B-Instruct-v0.1",
       {
