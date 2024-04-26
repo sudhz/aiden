@@ -23,7 +23,7 @@ cd aiden
 
 2. **Set up the .env file**
 
-Create a `.env` file in the root directory of the project with the following structure:
+Create a `.env` file in the `backend` directory of the project with the following structure:
 
 ```plaintext
 DEEPINFRA_KEY=<your_deepinfra_key>
