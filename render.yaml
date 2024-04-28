@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: frontend
+    runtime: docker
+    buildCommand: docker build -t frontend ./frontend
+    startCommand: docker run -p 3000:3000 frontend
+    envVars:
+      - key: PORT
+        value: 3000
+  - type: web
+    name: backend
+    runtime: docker
+    buildCommand: docker build -t backend ./backend
+    startCommand: docker run -p 8000:8000 backend
+    envVars:
+      - key: PORT
+        value: 8000
