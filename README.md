@@ -35,17 +35,19 @@ Make sure to replace the placeholders with your actual keys.
 
 3. **Install dependencies**
 
-Run the following command to install all the necessary dependencies:
+Run the following commands in the `frontend` directory to install all the necessary dependencies and start the frontend service:
 
 ```bash
 npm install
+npm start
 ```
 
 4. **Start the backend server**
 
-To start the server, run:
+To start the backend server, run the following commands in the `backend` directory:
 
 ```bash
+npm install
 npm run dev
 ```
 
