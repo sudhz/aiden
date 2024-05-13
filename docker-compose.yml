@@ -3,6 +3,8 @@ services:
     platform: linux/amd64
     image: aidenregistry.azurecr.io/frontend
     build: ./frontend
+    networks:
+      - aiden_network
     ports:
       - 3000:3000
     depends_on:
@@ -11,3 +13,9 @@ services:
     platform: linux/amd64
     image: aidenregistry.azurecr.io/backend
     build: ./backend
+    networks:
+      - aiden_network
+
+networks:
+  aiden_network:
+    driver: bridge
